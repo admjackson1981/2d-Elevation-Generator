@@ -28,64 +28,64 @@ public class oldGps : MonoBehaviour
     public Details detailLevel;
     private int increase = 1;
     private int elevationCount;
-    private const string file = "C:/Users/antho/Downloads/Sunday_hike.gpx";
+    private const string file = "C:/Users/antho/Downloads/Joined_the_local_charity_ride_great_fun_looped_back_a_bit_to_do_some_extra_stuff_then_finish_with_a_nice_cold_one_.gpx";
     // Start is called before the first frame update
     void Start()
     {
-      
+
         Movetonext();
     }
     void Movetonext()
     {
         XmlTextReader reader = new XmlTextReader(file);
-         bool ele = false;
+        bool ele = false;
         while (reader.Read())
         {
-           
+
             switch (reader.NodeType)
             {
                 case XmlNodeType.Element: // The node is an element.
-                     if(reader.Name == "ele")
+                    if (reader.Name == "ele")
                     {
                         ele = true;
                     }
-                     
+
                     //if(reader.Name == "Name")
 
                     //while (reader.MoveToNextAttribute())
-                        //Debug.Log(" " + reader.Name + "='" + reader.Value + "'");
-                        //Debug.Log(reader.Name);
+                    //Debug.Log(" " + reader.Name + "='" + reader.Value + "'");
+                    //Debug.Log(reader.Name);
                     //Debug.Log(">>");
                     break;
 
                 case XmlNodeType.Text: //Display the text in each element.
                     if (ele)
                     {
-                        elevation.Add(float.Parse( reader.Value));
+                        elevation.Add(float.Parse(reader.Value));
                         ele = false;
                     }
                     //Debug.Log(reader.Value);
                     break;
 
                 case XmlNodeType.EndElement: //Display the end of the element.
-                     //Debug.Log("</" + reader.Name + ">");
+                                             //Debug.Log("</" + reader.Name + ">");
 
                     break;
             }
         }
-    
-      
+
+
         float start = 0.000f;
-        if(Lowdetail)
+        if (Lowdetail)
         {
-             increase = 4;
-             LineRenderepoints = (int)Mathf.Round( elevation.Count / 4);
-             elevationCount = elevation.Count;
-             xScalefactor += xScalefactor * 4;
+            increase = 4;
+            LineRenderepoints = (int)Mathf.Round(elevation.Count / 4);
+            elevationCount = elevation.Count;
+            xScalefactor += xScalefactor * 4;
         }
         else if (Mediumdetail)
         {
-            LineRenderepoints = (int)Mathf.Round( elevation.Count / 2);
+            LineRenderepoints = (int)Mathf.Round(elevation.Count / 2);
             elevationCount = elevation.Count;
             increase = 2;
             xScalefactor += xScalefactor * 2;
@@ -95,8 +95,8 @@ public class oldGps : MonoBehaviour
             LineRenderepoints = elevation.Count;
             elevationCount = elevation.Count;
             increase = 1;
-           
-        }else if (UltraLow)
+
+        } else if (UltraLow)
         {
             increase = 8;
             LineRenderepoints = (int)Mathf.Round(elevation.Count / 8);
@@ -105,26 +105,29 @@ public class oldGps : MonoBehaviour
         }
 
         ScaledEelvation = new Vector3[elevationCount];
-        int ii= 0;
-        for (int i = 0 ; i < elevationCount;i+=increase)
+        int ii = 0;
+        for (int i = 0; i < elevationCount; i += increase)
         {
-            
+
             var min = elevation.Min();
-         
+
             float scaled = (float)((elevation[i] - min) * yScalefactor);
-            
-            ScaledEelvation[ii]= new Vector3(start, scaled);
+
+            ScaledEelvation[ii] = new Vector3(start, scaled);
             start += xScalefactor;
             ii++;
 
         }
-      
-        
+
+
 
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = LineRenderepoints;
         lineRenderer.SetPositions(ScaledEelvation);
 
+        gameObject.AddComponent<BoxCollider2D>();
+
+        //Simple();
 
     }
     void Simple()
@@ -155,6 +158,12 @@ public class oldGps : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-     
+
+    }
+    public void ChangeLineWidth(float single)
+    {
+        
+        lineRenderer.startWidth =single * 2;
+        lineRenderer.endWidth=single * 2;
     }
 }
