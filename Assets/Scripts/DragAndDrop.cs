@@ -46,7 +46,7 @@ public class DragAndDrop : MonoBehaviour
     }
     private void MousePressed(InputAction.CallbackContext obj)
     {
-        Debug.Log("pressed");
+        Debug.Log("pressed mouse    ");
      Ray ray=   mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
         RaycastHit hit;
@@ -57,12 +57,14 @@ public class DragAndDrop : MonoBehaviour
                 Debug.Log("hit" + hit.collider.name);
                 StartCoroutine(DragUpdate(hit.collider.gameObject));
             }
+            
         }
 
         RaycastHit2D hit2d = Physics2D.GetRayIntersection(ray);
        
             if (hit2d.collider != null)
             {
+          
                 Debug.Log("hit" + hit2d.collider.name);
                 StartCoroutine(DragUpdate(hit2d.collider.gameObject));
             }

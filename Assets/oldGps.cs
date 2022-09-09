@@ -28,7 +28,7 @@ public class oldGps : MonoBehaviour
     public Details detailLevel;
     private int increase = 1;
     private int elevationCount;
-    private const string file = "C:/Users/antho/Downloads/Joined_the_local_charity_ride_great_fun_looped_back_a_bit_to_do_some_extra_stuff_then_finish_with_a_nice_cold_one_.gpx";
+    private const string file = "C:/Users/antho/Downloads/Afternoon_Hike.gpx";
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +39,7 @@ public class oldGps : MonoBehaviour
     {
         XmlTextReader reader = new XmlTextReader(file);
         bool ele = false;
+        bool name = false;
         while (reader.Read())
         {
 
@@ -50,12 +51,12 @@ public class oldGps : MonoBehaviour
                         ele = true;
                     }
 
-                    //if(reader.Name == "Name")
-
-                    //while (reader.MoveToNextAttribute())
-                    //Debug.Log(" " + reader.Name + "='" + reader.Value + "'");
-                    //Debug.Log(reader.Name);
-                    //Debug.Log(">>");
+                    if (reader.Name == "name")
+                    { name = true; }
+                       // while (reader.MoveToNextAttribute())
+                       // Debug.Log(" " + reader.Name + "='" + reader.Value + "'");
+                       // Debug.Log(reader.Name);
+                       // Debug.Log(">>");
                     break;
 
                 case XmlNodeType.Text: //Display the text in each element.
@@ -63,6 +64,11 @@ public class oldGps : MonoBehaviour
                     {
                         elevation.Add(float.Parse(reader.Value));
                         ele = false;
+                    }
+                    else if (name)
+                    {
+                        Debug.Log(reader.Value);
+                        name = false;
                     }
                     //Debug.Log(reader.Value);
                     break;

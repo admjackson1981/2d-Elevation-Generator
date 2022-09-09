@@ -19,8 +19,8 @@ public class CameraCapture : MonoBehaviour
     {
         RenderPipelineManager.endCameraRendering += RenderPipelineManager_endCamerRednginerlg;
     }
+ 
 
-    
     private void RenderPipelineManager_endCamerRednginerlg(ScriptableRenderContext arg1, Camera arg2)
     {
         if (TakeScreenshot)
@@ -29,9 +29,12 @@ public class CameraCapture : MonoBehaviour
             TakeScreenshot = false;
                  int width = Screen.width;
                 int height = Screen.height;
-                //_camera.targetTexture = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
-                Texture2D screenshotTexturee = new Texture2D(width, height, TextureFormat.ARGB32, false);
+           
+                Texture2D screenshotTexturee = new Texture2D(width, height, TextureFormat.RGBA32, false);
+
+
                 Rect rect = new Rect(0, 0, width, height);
+              
                 screenshotTexturee.ReadPixels(rect, 0, 0);
                 screenshotTexturee.Apply();
 
@@ -44,8 +47,7 @@ public class CameraCapture : MonoBehaviour
 
     public void Capture()
     {
-        //  ScreenCapture.CaptureScreenshot("out.png");
-        // StartCoroutine(ScreenShot());
+       
         TakeScreenshot = true;
     }
     IEnumerator ScreenShot()
@@ -63,6 +65,10 @@ public class CameraCapture : MonoBehaviour
         byte[] byterArray = screenshotTexturee.EncodeToPNG();
         File.WriteAllBytes(Application.dataPath + "/CameraScreenshot.png", byterArray);
 
+    }
+    private void OnDestroy()
+    {
+        RenderPipelineManager.endCameraRendering -= RenderPipelineManager_endCamerRednginerlg;
     }
 
 
