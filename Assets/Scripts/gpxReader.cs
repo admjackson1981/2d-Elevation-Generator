@@ -2,7 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using UnityEngine;
-
+using System.Xml.Serialization;
+using System.IO;
 [SerializeField]
 public class Details {
     public bool Low;
@@ -10,7 +11,7 @@ public class Details {
     public bool High;
 }
 
-public class oldGps : MonoBehaviour
+public class gpxReader : MonoBehaviour
 {
     private const string filename = "Sunday_hike.gpx";
     private List<float> elevation = new List<float>();
@@ -32,17 +33,28 @@ public class oldGps : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        XmlSerializer xmlSerialiser = new XmlSerializer(typeof(XmlSerialGpx.Gpx));
 
-        Movetonext();
+        FileStream fs = new FileStream(file, FileMode.Open);
+        XmlReader readers = XmlReader.Create(fs);
+
+        XmlSerialGpx.Gpx objgpx = (XmlSerialGpx.Gpx)xmlSerialiser.Deserialize(readers);
+
+        Debug.Log(objgpx.trk.trkseg.trkpt[0].lat);
+
+        // Movetonext();
     }
     void Movetonext()
     {
         XmlTextReader reader = new XmlTextReader(file);
         bool ele = false;
         bool name = false;
+
+       
+
         while (reader.Read())
         {
-
+            
             switch (reader.NodeType)
             {
                 case XmlNodeType.Element: // The node is an element.
@@ -57,6 +69,10 @@ public class oldGps : MonoBehaviour
                        // Debug.Log(" " + reader.Name + "='" + reader.Value + "'");
                        // Debug.Log(reader.Name);
                        // Debug.Log(">>");
+                       if(reader.Name == "trkpt")
+                    {
+                        Debug.Log(reader.Name);
+                    }
                     break;
 
                 case XmlNodeType.Text: //Display the text in each element.
@@ -161,11 +177,7 @@ public class oldGps : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+  
     public void ChangeLineWidth(float single)
     {
         
